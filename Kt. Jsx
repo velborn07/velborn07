@@ -1,0 +1,138 @@
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Phone, Mail } from "lucide-react";
+
+export default function HomePage() {
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        setFilteredProducts(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (!searchTerm) {
+      setFilteredProducts(products);
+    } else {
+      const lower = searchTerm.toLowerCase();
+      setFilteredProducts(
+        products.filter(
+          (p) =>
+            p.name.toLowerCase().includes(lower) ||
+            p.description.toLowerCase().includes(lower)
+        )
+      );
+    }
+  }, [searchTerm, products]);
+
+  return (
+    <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+      {/* Header */}
+      <header className="p-4 shadow-md flex justify-between items-center bg-white dark:bg-gray-800">
+        <h1 className="text-2xl font-bold">KT Business Group</h1>
+        <div className="space-x-2">
+          <Button variant="outline">Home</Button>
+          <Button variant="outline">About</Button>
+          <Button variant="outline">ZF Spare Parts</Button>
+          <Button variant="outline">Services</Button>
+          <Button variant="outline">Contact</Button>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="text-center p-16 bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
+        <h2 className="text-4xl font-extrabold mb-4">
+          Your Trusted Partner in Trade & Machinery
+        </h2>
+        <p className="text-lg mb-6">
+          Importing quality ZF spare parts and delivering excellence across
+          industries.
+        </p>
+        <Button className="text-white bg-black hover:bg-gray-800">
+          Explore Our Products
+        </Button>
+      </section>
+
+      {/* Search Bar */}
+      <section className="p-8 bg-gray-50 dark:bg-gray-800">
+        <h3 className="text-2xl font-bold mb-4">ZF Spare Parts</h3>
+        <input
+          type="text"
+          placeholder="Search products..."
+          className="w-full mb-6 p-3 rounded border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
+        {loading ? (
+          <p>Loading products...</p>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-6">
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
+                <Card
+                  key={product.id}
+                  onClick={() => setSelectedProduct(product)}
+                  className="cursor-pointer hover:shadow-lg"
+                >
+                  <CardContent className="p-6">
+                    <h4 className="text-xl font-semibold mb-2">{product.name}</h4>
+                    <p className="text-sm mb-2">{product.description}</p>
+                    <p className="font-bold">{product.price}</p>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <p>No products found.</p>
+            )}
+          </div>
+        )}
+
+        {/* Product Detail Modal */}
+        {selectedProduct && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-xl w-full max-w-md">
+              <h4 className="text-2xl font-bold mb-4">{selectedProduct.name}</h4>
+              <p className="mb-2">{selectedProduct.description}</p>
+              <p className="text-lg font-semibold mb-4">
+                Price: {selectedProduct.price}
+              </p>
+              <Button onClick={() => setSelectedProduct(null)} variant="outline">
+                Close
+              </Button>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* Contact Section */}
+      <section className="p-8 bg-gray-100 dark:bg-gray-800">
+        <h3 className="text-2xl font-bold mb-4">Contact Us</h3>
+        <div className="space-y-2">
+          <p className="flex items-center gap-2">
+            <Phone className="w-5 h-5" /> +251 911 123 456
+          </p>
+          <p className="flex items-center gap-2">
+            <Mail className="w-5 h-5" /> info@ktbusinessgroupet.com
+          </p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="p-4 text-center bg-white dark:bg-gray-800 border-t dark:border-gray-700">
+        <p>&copy; 2025 KT Business Group. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+}
