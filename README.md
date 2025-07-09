@@ -1,4 +1,5 @@
 👋 Hi, I'm Godoliyas Tatek Tariku
+
 🚀 Passionate about software development, problem-solving, and building clean, user-focused digital experiences.
 💡 Self-taught coder with a growing interest in web development, automation, and open-source collaboration.
 🌍 Based in Ethiopia | 📚 High school student aiming to study computer science abroad.
