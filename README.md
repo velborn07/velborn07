@@ -34,7 +34,7 @@ Empower students in Ethiopia with access to tech learning
 
 💼 Portfolio: [Coming Soon]
 
-🧾 Certificates: 3+ (Coding platforms & school tech club)
+🧾 Certificates: 20+ (Coding platforms & school tech club)
 
 📩 Telegram: @Some_one0707
 
